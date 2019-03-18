@@ -1,0 +1,192 @@
+<html>
+<head>
+    <title>Test 1</title>
+    <style>
+        body {
+            --completed-text-color: #404000;
+            --working-text-color: #334488;
+            --unreached-text-color: #CCCCCC;
+        }
+
+        .type-text {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .hidden { display: none; }
+
+        .done-typing { color: var(--completed-text-color); }
+
+        .typing {
+            background-color: var(--working-text-color);
+            color: white;
+        }
+
+        .to-be-typed { color: var(--unreached-text-color); }
+
+        .error { }
+        .replacement { }
+    </style>
+</head>
+<body>
+<script>
+    var currentTypingIndex;
+    var typingTexts;
+    var updateHandle;
+    var errorWords;
+    window.onload = function() {
+        document.addEventListener('keydown', keyPush);
+        currentTypingIndex = 0;
+        typingTexts = document.getElementsByClassName('type-text');
+        updateHandle = window.setInterval(update, 1000);
+        errorWords = new ErrorWords();
+    }
+
+    var currentDiv;
+    var currentLetter;
+
+    var typingLetterFinished;
+    var typingLetterToDo;
+
+    function keyPush(evt) {
+
+        if (evt.key.toLowerCase() === typingLetterToDo.toLowerCase()[0]) {
+            typingLetterFinished += typingLetterToDo[0];
+            typingLetterToDo = typingLetterToDo.substr(1);
+        }
+        if (typingLetterFinished === currentLetter.innerText) {
+            currentLetter.classList.remove('typing');
+            currentLetter.classList.add('done-typing');
+            currentLetter = null;
+            update();
+        }
+    }
+
+    function convertToElements(stringInput, divID) {
+        let flagError = false;
+        let flagReplacement = false;
+        for (let i = 0; i < stringInput.length; i++) {
+            if (stringInput[i] === '-') {
+                flagError = !flagError;
+            } else if (stringInput[i] === '/') {
+                flagReplacement = !flagReplacement;
+            } else {
+                if (flagError) {
+                    document.getElementById(divID).innerHTML +=
+                        `<span class="to-be-typed error">${stringInput[i]}</span>`;
+                } else if (flagReplacement) {
+                    document.getElementById(divID).innerHTML +=
+                        `<span class="to-be-typed replacement hidden">${stringInput[i]}</span>`;
+                } else {
+                    document.getElementById(divID).innerHTML +=
+                        `<span class="to-be-typed">${stringInput[i]}</span>`;
+                }
+            }
+        }
+    }
+
+
+    function update() {
+        try {
+            updateCurrentWord();
+        } catch (e) {
+            updateCurrentDiv();
+            try {
+                updateCurrentWord();
+            } catch (i) {
+                window.clearInterval(updateHandle);
+                window.removeEventListener('keydown', keyPush);
+                alert('Game is finished!');
+            }
+        }
+        //console.log(currentDiv);
+        //console.log(currentLetter);
+        console.log(errorWords);
+    }
+
+    class ErrorWords {
+        constructor() {
+            this.words = [];
+            this.flag = false;
+        }
+    }
+
+    function updateCurrentWord() {
+        if (currentLetter == null) {
+            currentLetter = getNextWord();
+            if (currentLetter.classList.contains('error')) {
+                errorWords.words.push(currentLetter);
+                errorWords.flag = true;
+            } else {
+                if (errorWords.words.length !== 0 && errorWords.flag === true) {
+                    const wordsToBeHidden = currentDiv.getElementsByClassName('error');
+                    for (let i = 0; i < wordsToBeHidden.length; i++) {
+                        wordsToBeHidden[i].classList.add('hidden');
+                    }
+                    errorWords.words = [];
+                    const elements = currentDiv.getElementsByClassName('to-be-typed');
+                    for (let temp = 0; elements[temp].classList.contains('replacement'); temp++) {
+                        elements[temp].classList.remove('hidden');
+                    }
+                }
+                errorWords.flag = false;
+            }
+            currentLetter.classList.remove('to-be-typed');
+            currentLetter.classList.add('typing');
+
+            typingLetterFinished = '';
+            typingLetterToDo = currentLetter.innerText;
+        }
+    }
+
+    function getNextWord() {
+        const result = currentDiv.getElementsByClassName('to-be-typed')[0];
+        if (result == null) {
+            currentDiv = null;
+        }
+        return result;
+    }
+
+    function updateCurrentDiv() {
+        if (currentDiv == null) {
+            console.log(typingTexts);
+            currentDiv = typingTexts[currentTypingIndex++];
+            if (currentDiv.classList.contains('hidden')) {
+                currentDiv.classList.remove('hidden');
+            }
+        }
+    }
+</script>
+<div>
+    <span class="done-typing">This is finished some text.</span>
+    <span class="typing">This is some in progress text.</span>
+    <span class="to-be-typed">This text is to be typed.</span>
+</div>
+<div class="type-text hidden" id="text1"></div>
+<div class="type-text hidden" id="text2"></div>
+<div class="type-text hidden" id="text3"></div>
+<div class="type-text hidden" id="text4"></div>
+<div class="type-text hidden" id="text5"></div>
+<div class="type-text hidden" id="text6"></div>
+<div class="type-text hidden" id="text7"></div>
+<div class="type-text hidden" id="text8"></div>
+<div class="type-text hidden" id="text9"></div>
+<div class="type-text hidden" id="text10"></div>
+<div class="type-text hidden" id="text11"></div>
+<div class="type-text hidden" id="text12"></div>
+<script>
+    //convertToElements('This is a string.', 'text1');
+    //convertToElements('THIS IS ANOTHER STRING', 'text2');
+    convertToElements('I was a -civilian-/soldier/.', 'text1');
+    convertToElements('I am writing a letter to my wife.', 'text2');
+    convertToElements('This is World War 2', 'text3');
+    //convertToElements('a', 'text6');
+    //convertToElements('a', 'text7');
+    //convertToElements('a', 'text8');
+    //convertToElements('a', 'text9');
+    //convertToElements('a', 'text10');
+    //convertToElements('a', 'text11');
+    //convertToElements('a', 'text12');
+</script>
+</body>
+</html>
