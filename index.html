@@ -13,18 +13,23 @@
                     'I am glad to say that I am finally out of boot camp and in France. I am writing this letter to you in a train.'))
                 .Enqueue(new State('error',
                     'Everything in camp was terrible. They had us running from sun up till sun down. I saw people nearly die from overexertion.'))
-                .Enqueue(new State('replace', 'Everything in camp was fantastic. We had amazing food and it was in a beautiful place.'))
+                .Enqueue(new State('replace',
+                    'Everything in camp was fantastic. We had amazing food and it was in a beautiful place.'))
                 .Enqueue(new State('br'))
-                .Enqueue(new State('p', 'I made a friend named Tom. He is a corporal. He is pretty cool. Good at shooting, too.'))
+                .Enqueue(new State('p',
+                    'I made a friend named Tom. He is a corporal. He is pretty cool. Good at shooting, too.'))
                 .Enqueue(new State('error', "I sure do hope we don't have to shoot anybody."))
-                .Enqueue(new State('replace',"I am getting pretty good at it too. Not that I'll need to do any. I heard the war is almost over."))
+                .Enqueue(new State('replace',
+                    "I am getting pretty good at it too. Not that I'll need to do any. I heard the war is almost over."))
                 .Enqueue(new State('br'))
                 .Enqueue(new State('p', 'Anyways, my train is coming close to the station.'))
-                .Enqueue(new State('error',"I can hear the gunfire now. I hope I don't die."))
-                .Enqueue(new State('replace',"I can hear children playing and birds chirping."))
+                .Enqueue(new State('error', "I can hear the gunfire now. I hope I don't die."))
+                .Enqueue(new State('replace', "I can hear children playing and birds chirping."))
                 .Enqueue(new State('br'))
-                .Enqueue(new State('p',"Anyways, I'll send you another letter soon. I love you. Thanks for taking care of the kids."))
-                .Enqueue(new State('picture', {picture:'assets/graphics/backgrounds/YouCanDoIt.jpg',width:'200px',height:'258.934592'}))
+                .Enqueue(new State('p',
+                    "Anyways, I'll send you another letter soon. I love you. Thanks for taking care of the kids."))
+                .Enqueue(new State('picture',
+                    { picture: 'assets/graphics/backgrounds/YouCanDoIt.jpg', width: '200px', height: '258.934592' }))
                 .Start();
         }
     </script>
@@ -32,8 +37,10 @@
         var Texts;
         var CurrentTextIndex = 0;
         var TypingMachine;
+
         function KeyPush(e) {
-            if (e.key.toLowerCase() === Texts[CurrentTextIndex].innerText.toLowerCase() || Texts[CurrentTextIndex].innerText.toLowerCase() === '') {
+            if (e.key.toLowerCase() === Texts[CurrentTextIndex].innerText.toLowerCase() ||
+                Texts[CurrentTextIndex].innerText.toLowerCase() === '') {
                 try {
                     KeyPushSuccess.call();
                 } catch (e) {
@@ -50,17 +57,19 @@
                     throw "Out of range";
                 }
                 try {
-                    if (!Texts[CurrentTextIndex + 5].classList.contains('replace') && ! Texts[CurrentTextIndex+5].classList.contains('img')) {
+                    if (!Texts[CurrentTextIndex + 5].classList.contains('replace') ||
+                        !Texts[CurrentTextIndex + 5].classList.contains('img')) {
                         Texts[CurrentTextIndex + 5].classList.remove('hidden');
                     }
-                } catch (e) { }
+                } catch (e) {
+                }
 
                 if (Texts[CurrentTextIndex].classList.contains('error')) {
                     Texts[CurrentTextIndex].classList.add('shaking');
                 }
                 Texts[CurrentTextIndex].classList.remove('active');
                 Texts[CurrentTextIndex].classList.add('completed');
-                
+
                 CurrentTextIndex++;
                 if (Texts[CurrentTextIndex].classList.contains('error')) {
                     this.error = true;
@@ -85,13 +94,13 @@
                 }
                 if (Texts[CurrentTextIndex].classList.contains('img')) {
                     Texts[CurrentTextIndex].classList.remove('hidden');
-                    Texts[CurrentTextIndex+5].classList.remove('hidden');
+                    Texts[CurrentTextIndex + 5].classList.remove('hidden');
                     CurrentTextIndex++;
                 }
                 Texts[CurrentTextIndex].classList.remove('ghost');
                 Texts[CurrentTextIndex].classList.add('active');
             }
-        }
+        };
 
         function StartTyping() {
             TypingMachine = new StateMachine()
@@ -109,13 +118,13 @@
                 .Enqueue(new State('script',
                     {
                         call: function() {
-                            document.addEventListener('keydown',KeyPush);
+                            document.addEventListener('keydown', KeyPush);
                         }
                     }))
                 .Enqueue(new State('script',
                     {
                         call: function() {
-                            
+
                             for (let i = 1; i < 5; i++) {
                                 Texts[i].classList.remove('hidden');
                             }
@@ -129,7 +138,7 @@
                         audioLocation: 'assets\\audio\\InsideTrain.wav',
                         call: function() {
                             const audio = new Audio(this.audioLocation);
-                            audio.volume = 0.25;
+                            audio.volume = 0.55;
                             audio.play();
                             audio.loop = true;
                         }
@@ -143,6 +152,9 @@
             alert('Hello! Welcome to my typing game.');
             alert('You are a World War I soldier who is writing letters to his wife.');
             alert('Press the same key as the highlighted character to "write" your message.');
+            alert('Make sure your sound is on!');
+            alert(
+                'If you are using Firefox, the " \' " key causes the browser to start a search. Press escape to get out of this.');
             alert('If there is no highlighted key, press space. (BUG)');
             StartFactory();
             StartTyping();
@@ -151,9 +163,9 @@
 </head>
 <body onload="StartProgram('assets\\graphics\\backgrounds\\OldTrainInside.jpg')">
 <div class="background">
-    <img id="background-pic" style="width: 105%; height: 105%; position: absolute; left: -20px; top: -20px;"/>
-    <img id="journal-image" src="assets/graphics/Notebook2PgDirtyEmpty.png" style="width: 800px;height: 600px; position: absolute; left: 100px; top: 100px"/>
-    <div id="bod" style="width: 750px; height: 500px; overflow: scroll; position: absolute; left: 130px; top: 130px;"></div>
+    <img id="background-pic" style="height: 105%; left: -20px; position: absolute; top: -20px; width: 105%;"/>
+    <img id="journal-image" src="assets/graphics/Notebook2PgDirtyEmpty.png" style="height: 600px; left: 100px; position: absolute; top: 100px; width: 800px;"/>
+    <div id="bod" style="height: 500px; left: 130px; overflow: scroll; position: absolute; top: 130px; width: 750px;"></div>
 </div>
 </body>
 </html>
