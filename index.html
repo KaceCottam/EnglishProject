@@ -1,192 +1,155 @@
 <html>
 <head>
-    <title>Test 1</title>
-    <style>
-        body {
-            --completed-text-color: #404000;
-            --working-text-color: #334488;
-            --unreached-text-color: #CCCCCC;
+    <title>Test 2</title>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <script type="text/javascript" src="state_machine.js"></script>
+    <script>
+        function StartFactory() {
+            new StateMachine()
+                .Enqueue(new State('p', 'Hello honey,'))
+                .Enqueue(new State('p',
+                    'How are you doing? I finally received your letters and I am glad to hear that the kids are all okay.'))
+                .Enqueue(new State('p',
+                    'I am glad to say that I am finally out of boot camp and in France. I am writing this letter to you in a train.'))
+                .Enqueue(new State('error',
+                    'Everything in camp was terrible. They had us running from sun up till sun down. I saw people nearly die from overexertion.'))
+                .Enqueue(new State('replace', 'Everything in camp was fantastic. We had amazing food and it was in a beautiful place.'))
+                .Enqueue(new State('br'))
+                .Enqueue(new State('p', 'I made a friend named Tom. He is a corporal. He is pretty cool. Good at shooting, too.'))
+                .Enqueue(new State('error', "I sure do hope we don't have to shoot anybody."))
+                .Enqueue(new State('replace',"I am getting pretty good at it too. Not that I'll need to do any. I heard the war is almost over."))
+                .Enqueue(new State('br'))
+                .Enqueue(new State('p', 'Anyways, my train is coming close to the station.'))
+                .Enqueue(new State('error',"I can hear the gunfire now. I hope I don't die."))
+                .Enqueue(new State('replace',"I can hear children playing and birds chirping."))
+                .Enqueue(new State('br'))
+                .Enqueue(new State('p',"Anyways, I'll send you another letter soon. I love you. Thanks for taking care of the kids."))
+                .Enqueue(new State('picture', {picture:'assets/graphics/backgrounds/YouCanDoIt.jpg',width:'200px',height:'258.934592'}))
+                .Start();
+        }
+    </script>
+    <script>
+        var Texts;
+        var CurrentTextIndex = 0;
+        var TypingMachine;
+        function KeyPush(e) {
+            if (e.key.toLowerCase() === Texts[CurrentTextIndex].innerText.toLowerCase() || Texts[CurrentTextIndex].innerText.toLowerCase() === '') {
+                try {
+                    KeyPushSuccess.call();
+                } catch (e) {
+                    document.removeEventListener('keydown', KeyPush);
+                }
+            }
         }
 
-        .type-text {
-            font-size: 23px;
-            font-weight: bold;
-        }
+        var KeyPushSuccess = {
+            error: false,
+            errorSpans: [],
+            call: function() {
+                if (CurrentTextIndex >= Texts.length) {
+                    throw "Out of range";
+                }
+                try {
+                    if (!Texts[CurrentTextIndex + 5].classList.contains('replace') && ! Texts[CurrentTextIndex+5].classList.contains('img')) {
+                        Texts[CurrentTextIndex + 5].classList.remove('hidden');
+                    }
+                } catch (e) { }
 
-        .hidden { display: none; }
-
-        .done-typing { color: var(--completed-text-color); }
-
-        .typing {
-            background-color: var(--working-text-color);
-            color: white;
-        }
-
-        .to-be-typed { color: var(--unreached-text-color); }
-
-        .error { }
-        .replacement { }
-    </style>
-</head>
-<body>
-<script>
-    var currentTypingIndex;
-    var typingTexts;
-    var updateHandle;
-    var errorWords;
-    window.onload = function() {
-        document.addEventListener('keydown', keyPush);
-        currentTypingIndex = 0;
-        typingTexts = document.getElementsByClassName('type-text');
-        updateHandle = window.setInterval(update, 1000);
-        errorWords = new ErrorWords();
-    }
-
-    var currentDiv;
-    var currentLetter;
-
-    var typingLetterFinished;
-    var typingLetterToDo;
-
-    function keyPush(evt) {
-
-        if (evt.key.toLowerCase() === typingLetterToDo.toLowerCase()[0]) {
-            typingLetterFinished += typingLetterToDo[0];
-            typingLetterToDo = typingLetterToDo.substr(1);
-        }
-        if (typingLetterFinished === currentLetter.innerText) {
-            currentLetter.classList.remove('typing');
-            currentLetter.classList.add('done-typing');
-            currentLetter = null;
-            update();
-        }
-    }
-
-    function convertToElements(stringInput, divID) {
-        let flagError = false;
-        let flagReplacement = false;
-        for (let i = 0; i < stringInput.length; i++) {
-            if (stringInput[i] === '-') {
-                flagError = !flagError;
-            } else if (stringInput[i] === '/') {
-                flagReplacement = !flagReplacement;
-            } else {
-                if (flagError) {
-                    document.getElementById(divID).innerHTML +=
-                        `<span class="to-be-typed error">${stringInput[i]}</span>`;
-                } else if (flagReplacement) {
-                    document.getElementById(divID).innerHTML +=
-                        `<span class="to-be-typed replacement hidden">${stringInput[i]}</span>`;
+                if (Texts[CurrentTextIndex].classList.contains('error')) {
+                    Texts[CurrentTextIndex].classList.add('shaking');
+                }
+                Texts[CurrentTextIndex].classList.remove('active');
+                Texts[CurrentTextIndex].classList.add('completed');
+                
+                CurrentTextIndex++;
+                if (Texts[CurrentTextIndex].classList.contains('error')) {
+                    this.error = true;
                 } else {
-                    document.getElementById(divID).innerHTML +=
-                        `<span class="to-be-typed">${stringInput[i]}</span>`;
+                    this.error = false;
                 }
-            }
-        }
-    }
-
-
-    function update() {
-        try {
-            updateCurrentWord();
-        } catch (e) {
-            updateCurrentDiv();
-            try {
-                updateCurrentWord();
-            } catch (i) {
-                window.clearInterval(updateHandle);
-                window.removeEventListener('keydown', keyPush);
-                alert('Game is finished!');
-            }
-        }
-        //console.log(currentDiv);
-        //console.log(currentLetter);
-        console.log(errorWords);
-    }
-
-    class ErrorWords {
-        constructor() {
-            this.words = [];
-            this.flag = false;
-        }
-    }
-
-    function updateCurrentWord() {
-        if (currentLetter == null) {
-            currentLetter = getNextWord();
-            if (currentLetter.classList.contains('error')) {
-                errorWords.words.push(currentLetter);
-                errorWords.flag = true;
-            } else {
-                if (errorWords.words.length !== 0 && errorWords.flag === true) {
-                    const wordsToBeHidden = currentDiv.getElementsByClassName('error');
-                    for (let i = 0; i < wordsToBeHidden.length; i++) {
-                        wordsToBeHidden[i].classList.add('hidden');
-                    }
-                    errorWords.words = [];
-                    const elements = currentDiv.getElementsByClassName('to-be-typed');
-                    for (let temp = 0; elements[temp].classList.contains('replacement'); temp++) {
-                        elements[temp].classList.remove('hidden');
-                    }
+                if (this.error === true) {
+                    this.errorSpans.push(Texts[CurrentTextIndex]);
                 }
-                errorWords.flag = false;
-            }
-            currentLetter.classList.remove('to-be-typed');
-            currentLetter.classList.add('typing');
-
-            typingLetterFinished = '';
-            typingLetterToDo = currentLetter.innerText;
-        }
-    }
-
-    function getNextWord() {
-        const result = currentDiv.getElementsByClassName('to-be-typed')[0];
-        if (result == null) {
-            currentDiv = null;
-        }
-        return result;
-    }
-
-    function updateCurrentDiv() {
-        if (currentDiv == null) {
-            console.log(typingTexts);
-            currentDiv = typingTexts[currentTypingIndex++];
-            if (currentDiv.classList.contains('hidden')) {
-                currentDiv.classList.remove('hidden');
+                if (this.error === false && this.errorSpans.length !== 0) {
+                    for (let i = 0; i < this.errorSpans.length; i++) {
+                        this.errorSpans[i].classList.add('hidden');
+                        this.errorSpans[i].classList.remove('shaking');
+                    }
+                    let nextTextIndex = CurrentTextIndex;
+                    while (Texts[nextTextIndex].classList.contains('replace')) {
+                        Texts[nextTextIndex].classList.remove('hidden');
+                        nextTextIndex++;
+                    }
+                    this.errorSpans = [];
+                    alert("I can't say that...");
+                }
+                if (Texts[CurrentTextIndex].classList.contains('img')) {
+                    Texts[CurrentTextIndex].classList.remove('hidden');
+                    Texts[CurrentTextIndex+5].classList.remove('hidden');
+                    CurrentTextIndex++;
+                }
+                Texts[CurrentTextIndex].classList.remove('ghost');
+                Texts[CurrentTextIndex].classList.add('active');
             }
         }
-    }
-</script>
-<div>
-    <span class="done-typing">This is finished some text.</span>
-    <span class="typing">This is some in progress text.</span>
-    <span class="to-be-typed">This text is to be typed.</span>
+
+        function StartTyping() {
+            TypingMachine = new StateMachine()
+                .Enqueue(new State('script',
+                    {
+                        call: function() {
+                            Texts = document.getElementsByClassName('text');
+                            for (let i = 0; i < Texts.length; i++) {
+                                const currentText = Texts[i];
+                                currentText.classList.add('ghost');
+                                currentText.classList.add('hidden');
+                            }
+                        }
+                    }))
+                .Enqueue(new State('script',
+                    {
+                        call: function() {
+                            document.addEventListener('keydown',KeyPush);
+                        }
+                    }))
+                .Enqueue(new State('script',
+                    {
+                        call: function() {
+                            
+                            for (let i = 1; i < 5; i++) {
+                                Texts[i].classList.remove('hidden');
+                            }
+                            Texts[0].classList.remove('hidden');
+                            Texts[0].classList.remove('ghost');
+                            Texts[0].classList.add('active');
+                        }
+                    }))
+                .Enqueue(new State('script',
+                    {
+                        audioLocation: 'assets\\audio\\InsideTrain.wav',
+                        call: function() {
+                            const audio = new Audio(this.audioLocation);
+                            audio.volume = 0.25;
+                            audio.play();
+                            audio.loop = true;
+                        }
+                    }))
+                .Start();
+        }
+    </script>
+    <script>
+        function StartProgram(picSrc) {
+            document.getElementById('background-pic').src = picSrc;
+            StartFactory();
+            StartTyping();
+        }
+    </script>
+</head>
+<body onload="StartProgram('assets\\graphics\\backgrounds\\OldTrainInside.jpg')">
+<div class="background">
+    <img id="background-pic" style="width: 105%; height: 105%; position: absolute; left: -20px; top: -20px;"/>
+    <img id="journal-image" src="assets/graphics/Notebook2PgDirtyEmpty.png" style="width: 800px;height: 600px; position: absolute; left: 100px; top: 100px"/>
+    <div id="bod" style="width: 750px; height: 500px; overflow: scroll; position: absolute; left: 130px; top: 130px;"></div>
 </div>
-<div class="type-text hidden" id="text1"></div>
-<div class="type-text hidden" id="text2"></div>
-<div class="type-text hidden" id="text3"></div>
-<div class="type-text hidden" id="text4"></div>
-<div class="type-text hidden" id="text5"></div>
-<div class="type-text hidden" id="text6"></div>
-<div class="type-text hidden" id="text7"></div>
-<div class="type-text hidden" id="text8"></div>
-<div class="type-text hidden" id="text9"></div>
-<div class="type-text hidden" id="text10"></div>
-<div class="type-text hidden" id="text11"></div>
-<div class="type-text hidden" id="text12"></div>
-<script>
-    //convertToElements('This is a string.', 'text1');
-    //convertToElements('THIS IS ANOTHER STRING', 'text2');
-    convertToElements('I was a -civilian-/soldier/.', 'text1');
-    convertToElements('I am writing a letter to my wife.', 'text2');
-    convertToElements('This is World War 2', 'text3');
-    //convertToElements('a', 'text6');
-    //convertToElements('a', 'text7');
-    //convertToElements('a', 'text8');
-    //convertToElements('a', 'text9');
-    //convertToElements('a', 'text10');
-    //convertToElements('a', 'text11');
-    //convertToElements('a', 'text12');
-</script>
 </body>
 </html>
