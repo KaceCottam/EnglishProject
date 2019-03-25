@@ -44,7 +44,7 @@ class State {
             for (let i = 0; i < this.Data.length; ++i) {
                 bodyDiv.innerHTML += '<span class="text">' + this.Data[i] + '</span>';
             }
-            if (this.Type == 'p') {
+            if (this.Type === 'p') {
                 bodyDiv.innerHTML += '<br>';
             }
             break;
@@ -61,11 +61,16 @@ class State {
         case 'br':
             bodyDiv.innerHTML += '<br style="margin: '+this.Data+';"/>';
             break;
+        case 'blocked':
+            for (let i = 0; i < this.Data.length; ++i) {
+                bodyDiv.innerHTML += '<span class="text blocked">' + this.Data[i] + '</span>';
+            }
+            break;
         case 'script':
             this.Data.call();
             break;
         default:
-            throw 'State Type Error!'
+            throw 'State Type Error!';
         }
         return this;
     }

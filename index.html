@@ -1,8 +1,10 @@
 <html>
 <head>
     <title>Test 2</title>
-    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link rel="stylesheet" type="text/css" href="index.css" />
     <script type="text/javascript" src="state_machine.js"></script>
+    <script type="text/javascript" src="data/Letter1.js"></script>
+    <script type="text/javascript" src="data/LevelHandler.js"></script>
     <script>
         function StartFactory() {
             new StateMachine()
@@ -52,7 +54,7 @@
         var KeyPushSuccess = {
             error: false,
             errorSpans: [],
-            call: function() {
+            call: function () {
                 if (CurrentTextIndex >= Texts.length) {
                     throw "Out of range";
                 }
@@ -90,7 +92,8 @@
                         nextTextIndex++;
                     }
                     this.errorSpans = [];
-                    alert("I can't say that...");
+                    while (!confirm("I can't say that...")) {
+                    }
                 }
                 if (Texts[CurrentTextIndex].classList.contains('img')) {
                     Texts[CurrentTextIndex].classList.remove('hidden');
@@ -106,7 +109,7 @@
             TypingMachine = new StateMachine()
                 .Enqueue(new State('script',
                     {
-                        call: function() {
+                        call: function () {
                             Texts = document.getElementsByClassName('text');
                             for (let i = 0; i < Texts.length; i++) {
                                 const currentText = Texts[i];
@@ -117,13 +120,13 @@
                     }))
                 .Enqueue(new State('script',
                     {
-                        call: function() {
+                        call: function () {
                             document.addEventListener('keydown', KeyPush);
                         }
                     }))
                 .Enqueue(new State('script',
                     {
-                        call: function() {
+                        call: function () {
 
                             for (let i = 1; i < 5; i++) {
                                 Texts[i].classList.remove('hidden');
@@ -136,7 +139,7 @@
                 .Enqueue(new State('script',
                     {
                         audioLocation: 'assets\\audio\\InsideTrain.wav',
-                        call: function() {
+                        call: function () {
                             const audio = new Audio(this.audioLocation);
                             audio.volume = 0.55;
                             audio.play();
@@ -147,8 +150,7 @@
         }
     </script>
     <script>
-        function StartProgram(picSrc) {
-            document.getElementById('background-pic').src = picSrc;
+        function StartProgram() {
             alert('Hello! Welcome to my typing game.');
             alert('You are a World War I soldier who is writing letters to his wife.');
             alert('Press the same key as the highlighted character to "write" your message.');
@@ -156,16 +158,17 @@
             alert(
                 'If you are using Firefox, the " \' " key causes the browser to start a search. Press escape to get out of this.');
             alert('If there is no highlighted key, press space. (BUG)');
-            StartFactory();
-            StartTyping();
+            //StartFactory();
+            //StartTyping();
+            LevelEngine.Start();
         }
     </script>
 </head>
-<body onload="StartProgram('assets\\graphics\\backgrounds\\OldTrainInside.jpg')">
-<div class="background">
-    <img id="background-pic" style="height: 105%; left: -20px; position: absolute; top: -20px; width: 105%;"/>
-    <img id="journal-image" src="assets/graphics/Notebook2PgDirtyEmpty.png" style="height: 600px; left: 100px; position: absolute; top: 100px; width: 800px;"/>
-    <div id="bod" style="height: 500px; left: 130px; overflow: scroll; position: absolute; top: 130px; width: 750px;"></div>
-</div>
+<body onload="StartProgram()">
+    <div class="background">
+        <img id="background-pic" style="height: 105%; left: -20px; position: absolute; top: -20px; width: 105%;" />
+        <img id="journal-image" src="assets/graphics/Notebook2PgDirtyEmpty.png" style="height: 600px; left: 100px; position: absolute; top: 100px; width: 800px;" />
+        <div id="bod" style="height: 500px; left: 130px; overflow: scroll; position: absolute; top: 130px; width: 750px;"></div>
+    </div>
 </body>
 </html>

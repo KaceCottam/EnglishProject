@@ -4,9 +4,10 @@ html {
 
     --color-highlight: white;
     --color-highlight-background: rgb(133, 88, 44);
-    --color-ghosted: rgb(255, 255, 255);
+    --color-ghosted: rgb(47, 44, 37);
     --color-finished: rgb(0, 0, 117);
     --color-finished-error: rgb(138, 15, 15);
+    --color-blocked: black;
 }
 
 body {
@@ -51,10 +52,17 @@ body {
 .completed.text.error {
     color: var(--color-finished-error);
 }
+.completed.blocked.text {
+    color: var(--color-blocked);
+    background-color: var(--color-blocked);
+}
 
 .text {
+    background-color: var(--color-paper);
     font-size: 20px;
     font-weight: bold;
+    font-style: oblique;
+    font-family: "bradley hand itc";
 }
 
 .img {
