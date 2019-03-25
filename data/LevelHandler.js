@@ -31,8 +31,7 @@ var KeyPushSuccess = {
                 !Texts[CurrentTextIndex + 5].classList.contains('img')) {
                 Texts[CurrentTextIndex + 5].classList.remove('hidden');
             }
-        } catch (e) {
-        }
+        } catch (e) { }
 
         if (Texts[CurrentTextIndex].classList.contains('error')) {
             Texts[CurrentTextIndex].classList.add('shaking');
@@ -101,12 +100,13 @@ function StartTyping() {
             }))
         .Enqueue(new State('script',
             {
-                call: function() {
+                call: function () {
                     Typing = true;
                 }
             }))
         .Start();
 }
+
 var LevelEngine = new StateMachine()
     .Enqueue(new State("script",
         {
