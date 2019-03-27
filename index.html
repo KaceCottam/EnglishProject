@@ -15,6 +15,11 @@
         var TypingMachine;
 
         function StartProgram() {
+            alert('Hello! Welcome to my typing game.');
+            alert('You are a World War I soldier who is writing letters to his wife.');
+            alert('Press the same key as the highlighted character to "write" your message.');
+            alert('There are 5 letters in total. Complete them all.');
+            alert( 'If you are using Firefox, the " \' " key causes the browser to start a search. Press escape to get out of this.');
             TypingMachine = new TypingMachine(document.getElementById('target'), MainState.runOnce);
             MainState.enqueue(StartLetterAll).runOnce();
         }
