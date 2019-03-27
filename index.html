@@ -24,37 +24,6 @@
             MainState.enqueue(StartLetterAll).runOnce();
         }
 
-        function StartDemo() {
-            document.getElementById('background-pic').src = "assets/train.jpg";
-            const target = document.getElementById('target');
-            Processor.clearDiv(target);
-            Processor.processToDiv(target, 'Hello -honey,-/ how/ :are: ^you?^ ');
-            TypingMachine.startTyping();
-        }
-
-        function StartLetter1() {
-            document.getElementById('background-pic').src = "assets/train.jpg";
-            const target = document.getElementById('target');
-            Processor.clearDiv(target);
-            Processor.processToDiv(target,
-                'Day 1 France \n' +
-                'Dear Sweetie, \n' +
-                'I was finally able to read through all of your letters. \n' +
-                'Tell Tony that I am proud of his test scores. I am glad that you are all doing alright. ' +
-                'I miss being able to go home after a long day and be with you. \n' +
-                'I am on the train to France. The training was tough, but I endured. ' +
-                'We got up early and went to sleep late. ' +
-                'We had three meals a day, and half an hour to eat each. ' +
-                'Every day for breakfast I had some toast and eggs, just like the ones you made, except with fresher eggs and French bread. ' +
-                'It, however, could never match the breakfasts that you made. ' +
-                'The other meals were combinations of things like cheese, bread, vegetables, and potatoes. \n' +
-                'Even after all of this, it is still astonishing to think I was with you but a small while ago. ' +
-                ':It feels like the training has gone rather fast, ' +
-                'but I heard rumors that my company is basically set up to do chores for the higher ups.: \n' +
-                "Anyways, the train is coming to a stop soon, so I have to go. I love you so much, I'll send more letters when I can. \n\n\n");
-            TypingMachine.startTyping();
-        }
-
         function StartLetterAll() {
             document.getElementById('background-pic').src = "assets/train.jpg";
             const target = document.getElementById('target');
