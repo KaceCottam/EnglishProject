@@ -1,7 +1,7 @@
 # EnglishProject
 You are a WWII soldier writing letters to your wife and kids. Make sure you have their support by staying positive!
 
-[See the project!](https://www.KaceCottam.github.io/EnglishProject)
+[See the project!](https://KaceCottam.github.io/EnglishProject)
 
 ## Assignment
 > This project will ask you to combine some of the literary analysis skills that we have been working so far this semester with archival research. Taking inspiration from our study of Maus, you will be asked to delve into archival research relating to the topic of war, and then to bring that source to life through creative and analytical modes of composing. This project will require you to complete the following objectives:
