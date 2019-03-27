@@ -78,7 +78,8 @@ class TypingMachine {
                 document.removeEventListener("keydown", listener);
                 this.endFunc();
             }
-            return !(e.keyCode == 32);
+            // https://stackoverflow.com/questions/22559830/html-prevent-space-bar-from-scrolling-page
+            return !(e.keyCode === 32);
         };
         document.addEventListener("keydown", listener);
     }
