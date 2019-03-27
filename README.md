@@ -16,7 +16,7 @@ You are a WWII soldier writing letters to your wife and kids. Make sure you have
 > 
 > Manuscripts, Archives, and Special Collections Washington State University Libraries Pullman, WA
 ---
-## Essay \[ [PDF]() | [Word]() ]
+## Essay \[ [PDF](docs/EssayAnalysis-ENGL298.pdf) | [Word](docs/EssayAnalysis-ENGL298.docx) | [Markdown](docs/EssayAnalysis-ENGL298.md) ]
 > Made by
 > Kace Cottam, Washington State University Honors College.
 > (Computer Science BS, Japanese )
